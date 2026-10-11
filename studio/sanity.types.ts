@@ -127,6 +127,138 @@ export type Button = {
   link?: Link
 }
 
+export type ProductReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'product'
+}
+
+export type FeaturedProducts = {
+  _type: 'featuredProducts'
+  eyebrow?: string
+  heading?: string
+  products?: Array<
+    {
+      _key: string
+    } & ProductReference
+  >
+}
+
+export type ImageWithAlt = {
+  _type: 'imageWithAlt'
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  alt?: string
+}
+
+export type ProductVariant = {
+  _type: 'productVariant'
+  label: string
+  sku?: string
+  price?: number
+  stock: number
+}
+
+export type BlogCategory = {
+  _id: string
+  _type: 'blogCategory'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
+
+export type Order = {
+  _id: string
+  _type: 'order'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  stripeSessionId?: string
+  email?: string
+  customerName?: string
+  status?: 'paid' | 'fulfilled' | 'refunded'
+  total?: number
+  items?: Array<{
+    product?: ProductReference
+    name?: string
+    variant?: string
+    quantity?: number
+    unitPrice?: number
+    _type: 'orderItem'
+    _key: string
+  }>
+  shippingAddress?: string
+  createdAt?: string
+}
+
+export type CategoryReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'category'
+}
+
+export type Product = {
+  _id: string
+  _type: 'product'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name: string
+  slug: Slug
+  images?: Array<
+    {
+      _key: string
+    } & ImageWithAlt
+  >
+  category: CategoryReference
+  shortDescription?: string
+  description?: BlockContentTextOnly
+  featured?: boolean
+  price: number
+  compareAtPrice?: number
+  variants?: Array<
+    {
+      _key: string
+    } & ProductVariant
+  >
+  stock?: number
+  metal?: 'yellow-gold' | 'white-gold' | 'rose-gold' | 'silver' | 'platinum'
+  gemstones?: Array<string>
+  details?: string
+  care?: string
+}
+
+export type Category = {
+  _id: string
+  _type: 'category'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+  image?: ImageWithAlt
+  order?: number
+}
+
+export type CollectionReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'collection'
+}
+
 export type Settings = {
   _id: string
   _type: 'settings'
@@ -156,6 +288,22 @@ export type Settings = {
     _type: 'block'
     _key: string
   }>
+  announcement?: string
+  hero?: {
+    eyebrow?: string
+    heading?: string
+    headingAccent?: string
+    subheading?: string
+    image?: ImageWithAlt
+    ctaLabel?: string
+  }
+  featuredCollection?: CollectionReference
+  socialLinks?: Array<{
+    platform?: 'Instagram' | 'Pinterest' | 'TikTok' | 'Facebook'
+    url?: string
+    _type: 'socialLink'
+    _key: string
+  }>
   ogImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -183,6 +331,24 @@ export type SanityImageHotspot = {
   width: number
 }
 
+export type Collection = {
+  _id: string
+  _type: 'collection'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+  tagline?: string
+  description?: string
+  heroImage?: ImageWithAlt
+  products?: Array<
+    {
+      _key: string
+    } & ProductReference
+  >
+}
+
 export type Page = {
   _id: string
   _type: 'page'
@@ -200,6 +366,9 @@ export type Page = {
     | ({
         _key: string
       } & InfoSection)
+    | ({
+        _key: string
+      } & FeaturedProducts)
   >
 }
 
@@ -208,6 +377,13 @@ export type PersonReference = {
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'person'
+}
+
+export type BlogCategoryReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'blogCategory'
 }
 
 export type Post = {
@@ -230,6 +406,16 @@ export type Post = {
   }
   date?: string
   author?: PersonReference
+  categories?: Array<
+    {
+      _key: string
+    } & BlogCategoryReference
+  >
+  relatedProducts?: Array<
+    {
+      _key: string
+    } & ProductReference
+  >
 }
 
 export type Person = {
@@ -248,12 +434,6 @@ export type Person = {
     alt?: string
     _type: 'image'
   }
-}
-
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
 }
 
 export type SanityAssistInstructionTask = {
@@ -500,14 +680,26 @@ export type AllSanitySchemaTypes =
   | BlockContentTextOnly
   | BlockContent
   | Button
+  | ProductReference
+  | FeaturedProducts
+  | ImageWithAlt
+  | ProductVariant
+  | BlogCategory
+  | Slug
+  | Order
+  | CategoryReference
+  | Product
+  | Category
+  | CollectionReference
   | Settings
   | SanityImageCrop
   | SanityImageHotspot
+  | Collection
   | Page
   | PersonReference
+  | BlogCategoryReference
   | Post
   | Person
-  | Slug
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
   | SanityAssistSchemaTypeAnnotations

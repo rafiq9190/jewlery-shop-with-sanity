@@ -1,6 +1,15 @@
 import {person} from './documents/person'
 import {page} from './documents/page'
 import {post} from './documents/post'
+import {product} from './documents/product'
+import {category} from './documents/category'
+import {collection} from './documents/collection'
+import {order} from './documents/order'
+import {blogCategory} from './documents/blogCategory'
+import {subscriber} from './documents/subscriber'
+import {productVariant} from './objects/productVariant'
+import {imageWithAlt} from './objects/imageWithAlt'
+import {featuredProducts} from './objects/featuredProducts'
 import {callToAction} from './objects/callToAction'
 import {infoSection} from './objects/infoSection'
 import {settings} from './singletons/settings'
@@ -15,10 +24,19 @@ export const schemaTypes = [
   // Singletons
   settings,
   // Documents
+  product,
+  category,
+  collection,
+  order,
   page,
   post,
   person,
+  blogCategory,
+  subscriber,
   // Objects
+  productVariant,
+  imageWithAlt,
+  featuredProducts,
   button,
   blockContent,
   blockContentTextOnly,

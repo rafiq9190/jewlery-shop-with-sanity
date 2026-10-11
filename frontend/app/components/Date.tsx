@@ -7,7 +7,7 @@ export default function DateComponent({dateString}: {dateString: string | undefi
 
   return (
     <time dateTime={dateString} className="">
-      {format(new Date(dateString), 'LLLL	d, yyyy')}
+      {format(new Date(dateString), 'LLLL d, yyyy')}
     </time>
   )
 }

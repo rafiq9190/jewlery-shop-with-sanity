@@ -10,7 +10,7 @@ import type {Post} from '../../../sanity.types'
 
 export const post = defineType({
   name: 'post',
-  title: 'Post',
+  title: 'Journal post',
   icon: DocumentTextIcon,
   type: 'document',
   fields: [
@@ -82,6 +82,20 @@ export const post = defineType({
       title: 'Author',
       type: 'reference',
       to: [{type: 'person'}],
+    }),
+    defineField({
+      name: 'categories',
+      title: 'Journal categories',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'blogCategory'}]}],
+    }),
+    defineField({
+      name: 'relatedProducts',
+      title: 'Shop the story',
+      description: 'Products featured in this article',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'product'}]}],
+      validation: (rule) => rule.max(4),
     }),
   ],
   // List preview configuration. https://www.sanity.io/docs/previews-list-views

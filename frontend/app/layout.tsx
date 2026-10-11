@@ -2,12 +2,14 @@ import './globals.css'
 
 import {SpeedInsights} from '@vercel/speed-insights/next'
 import type {Metadata} from 'next'
-import {Inter, IBM_Plex_Mono} from 'next/font/google'
+import {Cormorant_Garamond, Jost} from 'next/font/google'
 import {draftMode} from 'next/headers'
 import {toPlainText} from 'next-sanity'
 import {VisualEditing} from 'next-sanity/visual-editing'
 import {Toaster} from 'sonner'
 
+import CartDrawer from '@/app/components/cart/CartDrawer'
+import {CartProvider} from '@/app/components/cart/CartProvider'
 import DraftModeToast from '@/app/components/DraftModeToast'
 import Footer from '@/app/components/Footer'
 import Header from '@/app/components/Header'
@@ -52,15 +54,16 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-const inter = Inter({
-  variable: '--font-inter',
+const cormorant = Cormorant_Garamond({
+  variable: '--font-cormorant',
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
   subsets: ['latin'],
   display: 'swap',
 })
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: '--font-ibm-plex-mono',
-  weight: ['400'],
+const jost = Jost({
+  variable: '--font-jost',
   subsets: ['latin'],
   display: 'swap',
 })
@@ -69,11 +72,11 @@ export default async function RootLayout({children}: LayoutProps<'/'>) {
   const {isEnabled: isDraftMode} = await draftMode()
 
   return (
-    <html lang="en" className={`${inter.variable} ${ibmPlexMono.variable} bg-white text-black`}>
+    <html lang="en" className={`${cormorant.variable} ${jost.variable}`}>
       <body>
-        <section className="min-h-screen pt-24">
+        <CartProvider>
           {/* The <Toaster> component is responsible for rendering toast notifications used in /app/client-utils.ts and /app/components/DraftModeToast.tsx */}
-          <Toaster />
+          <Toaster position="bottom-center" toastOptions={{className: 'font-sans'}} />
           {isDraftMode && (
             <>
               <DraftModeToast />
@@ -84,9 +87,10 @@ export default async function RootLayout({children}: LayoutProps<'/'>) {
           {/* The <SanityLive> component is responsible for making all sanityFetch calls in your application live, so should always be rendered. */}
           <SanityLive onError={handleError} />
           <Header />
-          <main className="">{children}</main>
+          <main className="min-h-[60vh]">{children}</main>
           <Footer />
-        </section>
+          <CartDrawer />
+        </CartProvider>
         <SpeedInsights />
       </body>
     </html>

@@ -12,6 +12,8 @@
     "deploy": "sanity deploy",
     "predev": "npm run sanity:typegen",
     "dev": "sanity dev",
+    "seed": "sanity exec scripts/seed.ts --with-user-token",
+    "seed:content": "sanity exec scripts/seed-content.ts --with-user-token",
     "sanity:typegen": "sanity schema extract --enforce-required-fields --path ../sanity.schema.json && sanity typegen generate",
     "start": "sanity start",
     "type-check": "tsc --noEmit"

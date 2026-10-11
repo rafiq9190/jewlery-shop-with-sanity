@@ -2,44 +2,150 @@
 
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+
+  --color-ivory: #faf7f2;
+  --color-cream: #f2ece2;
+  --color-sand: #e6dccb;
+  --color-champagne: #c9a96e;
+  --color-gold: #a8864d;
+  --color-gold-deep: #7d6236;
+  --color-ink: #1c1a17;
+  --color-stone: #6f685d;
+  --color-mist: #b7aea0;
+
+  /* Kept so template components (CTA, InfoSection) still render in the new palette */
+  --color-black: #1c1a17;
+  --color-white: #fff;
+  --color-brand: #a8864d;
+  --color-gray-50: #faf7f2;
+  --color-gray-100: #f2ece2;
+  --color-gray-200: #e6dccb;
+  --color-gray-500: #8a8378;
+  --color-gray-600: #6f685d;
+  --color-gray-700: #4a443c;
+  --color-gray-900: #1c1a17;
+
+  --shadow-soft: 0 30px 60px -30px rgba(60, 45, 20, 0.25);
+  --default-transition-duration: 300ms;
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 900ms var(--ease-luxe) both;
+  --animate-slow-zoom: slow-zoom 12s ease-out both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes slow-zoom {
+    from {
+      transform: scale(1.08);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+}
+
 @layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-ivory text-ink font-sans font-light;
+  }
   h1,
   h2,
   h3,
-  h4,
-  h5,
-  h6 {
-    @apply font-medium tracking-tight;
+  h4 {
+    @apply font-serif font-normal tracking-tight text-ink;
+  }
+  ::selection {
+    @apply bg-champagne/40;
+  }
+  :focus-visible {
+    @apply outline-1 outline-offset-4 outline-gold;
   }
 }
 
 @utility container {
   margin: 0 auto;
-  padding: 0 2rem;
+  width: 100%;
+  max-width: 88rem;
+  padding: 0 1.25rem;
+  @variant md {
+    padding: 0 2.5rem;
+  }
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* Uppercase, letter-spaced label used above headings and on buttons */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
 
-@theme {
-  --shadow-layer: 0 35px 60px -15px rgba(0, 0, 0, 0.3);
+/* Thin gold rule */
+@utility hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-champagne), transparent);
+}
 
-  --color-framework: #000;
-  --color-black: #0b0b0b;
-  --color-white: #fff;
-  --color-brand: #f50;
-  --color-blue: #0052ff;
-  --color-yellow: #cdea19;
-  --color-gray-50: #f6f6f8;
-  --color-gray-100: #eeeef1;
-  --color-gray-200: #e3e4e8;
-  --color-gray-300: #bbbdc9;
-  --color-gray-400: #9499ad;
-  --color-gray-500: #727892;
-  --color-gray-600: #515870;
-  --color-gray-700: #383d51;
-  --color-gray-800: #252837;
-  --color-gray-900: #1b1d27;
-  --color-gray-950: #13141b;
+@utility prose-luxe {
+  @apply prose prose-lg max-w-none;
+  --tw-prose-body: var(--color-stone);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-links: var(--color-gold-deep);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-quotes: var(--color-ink);
+  --tw-prose-quote-borders: var(--color-champagne);
+  --tw-prose-bullets: var(--color-champagne);
+  --tw-prose-hr: var(--color-sand);
+  & :where(h1, h2, h3, h4) {
+    font-family: var(--font-serif);
+    font-weight: 400;
+  }
+  & :where(blockquote) {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.5em;
+  }
+}
 
-  --default-transition-duration: 250ms;
+/* Reveal-on-scroll, toggled by the <Reveal> component */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 900ms var(--ease-luxe),
+    transform 900ms var(--ease-luxe);
+}
+[data-reveal='shown'] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
 }

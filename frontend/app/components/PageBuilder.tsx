@@ -67,10 +67,9 @@ function RenderEmptyState({page}: {page: GetPageQueryResult}) {
         path: `pageBuilder`,
       }).toString()}
     >
-      <div className="prose">
-        <h2 className="">This page has no content!</h2>
-        <p className="">Open the page in Sanity Studio to add content.</p>
-      </div>
+      <p className="text-center font-serif text-2xl italic text-stone">
+        Open this page in Sanity Studio to add content.
+      </p>
     </div>
   )
 }

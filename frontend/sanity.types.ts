@@ -127,6 +127,149 @@ export type Button = {
   link?: Link
 }
 
+export type ProductReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'product'
+}
+
+export type FeaturedProducts = {
+  _type: 'featuredProducts'
+  eyebrow?: string
+  heading?: string
+  products?: Array<
+    {
+      _key: string
+    } & ProductReference
+  >
+}
+
+export type ImageWithAlt = {
+  _type: 'imageWithAlt'
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  alt?: string
+}
+
+export type ProductVariant = {
+  _type: 'productVariant'
+  label: string
+  sku?: string
+  price?: number
+  stock: number
+}
+
+export type Subscriber = {
+  _id: string
+  _type: 'subscriber'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  email?: string
+  source?: string
+  createdAt?: string
+}
+
+export type BlogCategory = {
+  _id: string
+  _type: 'blogCategory'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
+
+export type Order = {
+  _id: string
+  _type: 'order'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  stripeSessionId?: string
+  email?: string
+  customerName?: string
+  status?: 'paid' | 'fulfilled' | 'refunded'
+  total?: number
+  items?: Array<{
+    product?: ProductReference
+    name?: string
+    variant?: string
+    quantity?: number
+    unitPrice?: number
+    _type: 'orderItem'
+    _key: string
+  }>
+  shippingAddress?: string
+  createdAt?: string
+}
+
+export type CategoryReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'category'
+}
+
+export type Product = {
+  _id: string
+  _type: 'product'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name: string
+  slug: Slug
+  images?: Array<
+    {
+      _key: string
+    } & ImageWithAlt
+  >
+  category: CategoryReference
+  shortDescription?: string
+  description?: BlockContentTextOnly
+  featured?: boolean
+  price: number
+  compareAtPrice?: number
+  variants?: Array<
+    {
+      _key: string
+    } & ProductVariant
+  >
+  stock?: number
+  metal?: 'yellow-gold' | 'white-gold' | 'rose-gold' | 'silver' | 'platinum'
+  gemstones?: Array<string>
+  details?: string
+  care?: string
+}
+
+export type Category = {
+  _id: string
+  _type: 'category'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+  image?: ImageWithAlt
+  order?: number
+}
+
+export type CollectionReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'collection'
+}
+
 export type Settings = {
   _id: string
   _type: 'settings'
@@ -156,6 +299,22 @@ export type Settings = {
     _type: 'block'
     _key: string
   }>
+  announcement?: string
+  hero?: {
+    eyebrow?: string
+    heading?: string
+    headingAccent?: string
+    subheading?: string
+    image?: ImageWithAlt
+    ctaLabel?: string
+  }
+  featuredCollection?: CollectionReference
+  socialLinks?: Array<{
+    platform?: 'Instagram' | 'Pinterest' | 'TikTok' | 'Facebook'
+    url?: string
+    _type: 'socialLink'
+    _key: string
+  }>
   ogImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -183,6 +342,24 @@ export type SanityImageHotspot = {
   width: number
 }
 
+export type Collection = {
+  _id: string
+  _type: 'collection'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  slug: Slug
+  tagline?: string
+  description?: string
+  heroImage?: ImageWithAlt
+  products?: Array<
+    {
+      _key: string
+    } & ProductReference
+  >
+}
+
 export type Page = {
   _id: string
   _type: 'page'
@@ -200,6 +377,9 @@ export type Page = {
     | ({
         _key: string
       } & InfoSection)
+    | ({
+        _key: string
+      } & FeaturedProducts)
   >
 }
 
@@ -208,6 +388,13 @@ export type PersonReference = {
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'person'
+}
+
+export type BlogCategoryReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'blogCategory'
 }
 
 export type Post = {
@@ -230,6 +417,16 @@ export type Post = {
   }
   date?: string
   author?: PersonReference
+  categories?: Array<
+    {
+      _key: string
+    } & BlogCategoryReference
+  >
+  relatedProducts?: Array<
+    {
+      _key: string
+    } & ProductReference
+  >
 }
 
 export type Person = {
@@ -248,12 +445,6 @@ export type Person = {
     alt?: string
     _type: 'image'
   }
-}
-
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
 }
 
 export type SanityAssistInstructionTask = {
@@ -500,14 +691,27 @@ export type AllSanitySchemaTypes =
   | BlockContentTextOnly
   | BlockContent
   | Button
+  | ProductReference
+  | FeaturedProducts
+  | ImageWithAlt
+  | ProductVariant
+  | Subscriber
+  | BlogCategory
+  | Slug
+  | Order
+  | CategoryReference
+  | Product
+  | Category
+  | CollectionReference
   | Settings
   | SanityImageCrop
   | SanityImageHotspot
+  | Collection
   | Page
   | PersonReference
+  | BlogCategoryReference
   | Post
   | Person
-  | Slug
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
   | SanityAssistSchemaTypeAnnotations
@@ -532,7 +736,7 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]
+// Query: *[_type == "settings"][0]{  ...,  featuredCollection->{    _id,    title,    "slug": slug.current,    tagline,    description,    heroImage  }}
 export type SettingsQueryResult = {
   _id: string
   _type: 'settings'
@@ -562,6 +766,29 @@ export type SettingsQueryResult = {
     _type: 'block'
     _key: string
   }>
+  announcement?: string
+  hero?: {
+    eyebrow?: string
+    heading?: string
+    headingAccent?: string
+    subheading?: string
+    image?: ImageWithAlt
+    ctaLabel?: string
+  }
+  featuredCollection: {
+    _id: string
+    title: string
+    slug: string
+    tagline: string | null
+    description: string | null
+    heroImage: ImageWithAlt | null
+  } | null
+  socialLinks?: Array<{
+    platform?: 'Facebook' | 'Instagram' | 'Pinterest' | 'TikTok'
+    url?: string
+    _type: 'socialLink'
+    _key: string
+  }>
   ogImage?: {
     asset?: SanityImageAssetReference
     media?: unknown
@@ -574,8 +801,216 @@ export type SettingsQueryResult = {
 } | null
 
 // Source: sanity/lib/queries.ts
+// Variable: productsQuery
+// Query: *[_type == "product" && defined(slug.current)    && (!defined($category) || category->slug.current == $category)    && (!defined($metal) || metal == $metal)    && (!defined($minPrice) || price >= $minPrice)    && (!defined($maxPrice) || price <= $maxPrice)  ] | order(featured desc, _createdAt desc) {      _id,  name,  "slug": slug.current,  price,  compareAtPrice,  metal,  "image": images[0],  "hoverImage": images[1],  "category": category->title,  "soldOut": select(    count(variants) > 0 => count(variants[stock > 0]) == 0,    coalesce(stock, 0) <= 0  ),  }
+export type ProductsQueryResult = Array<{
+  _id: string
+  name: string
+  slug: string
+  price: number
+  compareAtPrice: number | null
+  metal: 'platinum' | 'rose-gold' | 'silver' | 'white-gold' | 'yellow-gold' | null
+  image:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  hoverImage:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  category: string
+  soldOut: boolean | false | true
+}>
+
+// Source: sanity/lib/queries.ts
+// Variable: featuredProductsQuery
+// Query: *[_type == "product" && featured == true && defined(slug.current)] | order(_createdAt desc) [0...8] {      _id,  name,  "slug": slug.current,  price,  compareAtPrice,  metal,  "image": images[0],  "hoverImage": images[1],  "category": category->title,  "soldOut": select(    count(variants) > 0 => count(variants[stock > 0]) == 0,    coalesce(stock, 0) <= 0  ),  }
+export type FeaturedProductsQueryResult = Array<{
+  _id: string
+  name: string
+  slug: string
+  price: number
+  compareAtPrice: number | null
+  metal: 'platinum' | 'rose-gold' | 'silver' | 'white-gold' | 'yellow-gold' | null
+  image:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  hoverImage:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  category: string
+  soldOut: boolean | false | true
+}>
+
+// Source: sanity/lib/queries.ts
+// Variable: productQuery
+// Query: *[_type == "product" && slug.current == $slug][0] {      _id,  name,  "slug": slug.current,  price,  compareAtPrice,  metal,  "image": images[0],  "hoverImage": images[1],  "category": category->title,  "soldOut": select(    count(variants) > 0 => count(variants[stock > 0]) == 0,    coalesce(stock, 0) <= 0  ),    _type,    images,    shortDescription,    description,    details,    care,    gemstones,    stock,    variants[]{_key, label, price, stock},    "categoryRef": category->{_id, title, "slug": slug.current},  }
+export type ProductQueryResult = {
+  _id: string
+  name: string
+  slug: string
+  price: number
+  compareAtPrice: number | null
+  metal: 'platinum' | 'rose-gold' | 'silver' | 'white-gold' | 'yellow-gold' | null
+  image:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  hoverImage:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  category: string
+  soldOut: boolean | false | true
+  _type: 'product'
+  images: Array<
+    {
+      _key: string
+    } & ImageWithAlt
+  > | null
+  shortDescription: string | null
+  description: BlockContentTextOnly | null
+  details: string | null
+  care: string | null
+  gemstones: Array<string> | null
+  stock: number | null
+  variants: Array<{
+    _key: string
+    label: string
+    price: number | null
+    stock: number
+  }> | null
+  categoryRef: {
+    _id: string
+    title: string
+    slug: string
+  }
+} | null
+
+// Source: sanity/lib/queries.ts
+// Variable: relatedProductsQuery
+// Query: *[_type == "product" && category._ref == $categoryId && _id != $skip && defined(slug.current)] | order(featured desc) [0...4] {      _id,  name,  "slug": slug.current,  price,  compareAtPrice,  metal,  "image": images[0],  "hoverImage": images[1],  "category": category->title,  "soldOut": select(    count(variants) > 0 => count(variants[stock > 0]) == 0,    coalesce(stock, 0) <= 0  ),  }
+export type RelatedProductsQueryResult = Array<{
+  _id: string
+  name: string
+  slug: string
+  price: number
+  compareAtPrice: number | null
+  metal: 'platinum' | 'rose-gold' | 'silver' | 'white-gold' | 'yellow-gold' | null
+  image:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  hoverImage:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  category: string
+  soldOut: boolean | false | true
+}>
+
+// Source: sanity/lib/queries.ts
+// Variable: productSlugs
+// Query: *[_type == "product" && defined(slug.current)]  {"slug": slug.current}
+export type ProductSlugsResult = Array<{
+  slug: string
+}>
+
+// Source: sanity/lib/queries.ts
+// Variable: categoriesQuery
+// Query: *[_type == "category" && defined(slug.current)] | order(order asc, title asc) {    _id,    title,    "slug": slug.current,    image  }
+export type CategoriesQueryResult = Array<{
+  _id: string
+  title: string
+  slug: string
+  image: ImageWithAlt | null
+}>
+
+// Source: sanity/lib/queries.ts
+// Variable: collectionsQuery
+// Query: *[_type == "collection" && defined(slug.current)] | order(title asc) {    _id,    title,    "slug": slug.current,    tagline,    heroImage  }
+export type CollectionsQueryResult = Array<{
+  _id: string
+  title: string
+  slug: string
+  tagline: string | null
+  heroImage: ImageWithAlt | null
+}>
+
+// Source: sanity/lib/queries.ts
+// Variable: collectionQuery
+// Query: *[_type == "collection" && slug.current == $slug][0] {    _id,    _type,    title,    "slug": slug.current,    tagline,    description,    heroImage,    "products": products[]->{        _id,  name,  "slug": slug.current,  price,  compareAtPrice,  metal,  "image": images[0],  "hoverImage": images[1],  "category": category->title,  "soldOut": select(    count(variants) > 0 => count(variants[stock > 0]) == 0,    coalesce(stock, 0) <= 0  ),    }  }
+export type CollectionQueryResult = {
+  _id: string
+  _type: 'collection'
+  title: string
+  slug: string
+  tagline: string | null
+  description: string | null
+  heroImage: ImageWithAlt | null
+  products: Array<{
+    _id: string
+    name: string
+    slug: string
+    price: number
+    compareAtPrice: number | null
+    metal: 'platinum' | 'rose-gold' | 'silver' | 'white-gold' | 'yellow-gold' | null
+    image:
+      | ({
+          _key: string
+        } & ImageWithAlt)
+      | null
+    hoverImage:
+      | ({
+          _key: string
+        } & ImageWithAlt)
+      | null
+    category: string
+    soldOut: boolean | false | true
+  }> | null
+} | null
+
+// Source: sanity/lib/queries.ts
+// Variable: collectionSlugs
+// Query: *[_type == "collection" && defined(slug.current)]  {"slug": slug.current}
+export type CollectionSlugsResult = Array<{
+  slug: string
+}>
+
+// Source: sanity/lib/queries.ts
+// Variable: checkoutProductsQuery
+// Query: *[_type == "product" && _id in $ids] {    _id,    name,    price,    stock,    "image": images[0],    variants[]{_key, label, price, stock}  }
+export type CheckoutProductsQueryResult = Array<{
+  _id: string
+  name: string
+  price: number
+  stock: number | null
+  image:
+    | ({
+        _key: string
+      } & ImageWithAlt)
+    | null
+  variants: Array<{
+    _key: string
+    label: string
+    price: number | null
+    stock: number
+  }> | null
+}>
+
+// Source: sanity/lib/queries.ts
 // Variable: getPageQuery
-// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    name,    slug,    heading,    subheading,    "pageBuilder": pageBuilder[]{      ...,      _type == "callToAction" => {        ...,        button {          ...,            link {      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }        }      },      _type == "infoSection" => {        content[]{          ...,          markDefs[]{            ...,              _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }          }        }      },    },  }
+// Query: *[_type == 'page' && slug.current == $slug][0]{    _id,    _type,    name,    slug,    heading,    subheading,    "pageBuilder": pageBuilder[]{      ...,      _type == "callToAction" => {        ...,        button {          ...,            link {      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }      }        }      },      _type == "featuredProducts" => {        ...,        "products": products[]->{            _id,  name,  "slug": slug.current,  price,  compareAtPrice,  metal,  "image": images[0],  "hoverImage": images[1],  "category": category->title,  "soldOut": select(    count(variants) > 0 => count(variants[stock > 0]) == 0,    coalesce(stock, 0) <= 0  ),        }      },      _type == "infoSection" => {        content[]{          ...,          markDefs[]{            ...,              _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }          }        }      },    },  }
 export type GetPageQueryResult = {
   _id: string
   _type: 'page'
@@ -611,6 +1046,32 @@ export type GetPageQueryResult = {
         }
         theme?: 'dark' | 'light'
         contentAlignment?: 'imageFirst' | 'textFirst'
+      }
+    | {
+        _key: string
+        _type: 'featuredProducts'
+        eyebrow?: string
+        heading?: string
+        products: Array<{
+          _id: string
+          name: string
+          slug: string
+          price: number
+          compareAtPrice: number | null
+          metal: 'platinum' | 'rose-gold' | 'silver' | 'white-gold' | 'yellow-gold' | null
+          image:
+            | ({
+                _key: string
+              } & ImageWithAlt)
+            | null
+          hoverImage:
+            | ({
+                _key: string
+              } & ImageWithAlt)
+            | null
+          category: string
+          soldOut: boolean | false | true
+        }> | null
       }
     | {
         _key: string
@@ -656,8 +1117,13 @@ export type GetPageQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: sitemapData
-// Query: *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    _type,    _updatedAt,  }
+// Query: *[_type in ["page", "post", "product", "collection"] && defined(slug.current)] | order(_type asc) {    "slug": slug.current,    _type,    _updatedAt,  }
 export type SitemapDataResult = Array<
+  | {
+      slug: string
+      _type: 'collection'
+      _updatedAt: string
+    }
   | {
       slug: string
       _type: 'page'
@@ -668,11 +1134,16 @@ export type SitemapDataResult = Array<
       _type: 'post'
       _updatedAt: string
     }
+  | {
+      slug: string
+      _type: 'product'
+      _updatedAt: string
+    }
 >
 
 // Source: sanity/lib/queries.ts
 // Variable: allPostsQuery
-// Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
+// Query: *[_type == "post" && defined(slug.current)    && (!defined($category) || $category in categories[]->slug.current)  ] | order(date desc, _updatedAt desc) {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  "categories": categories[]->{title, "slug": slug.current},  }
 export type AllPostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
@@ -700,11 +1171,15 @@ export type AllPostsQueryResult = Array<{
       _type: 'image'
     }
   } | null
+  categories: Array<{
+    title: string
+    slug: string
+  }> | null
 }>
 
 // Source: sanity/lib/queries.ts
 // Variable: morePostsQuery
-// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
+// Query: *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  "categories": categories[]->{title, "slug": slug.current},  }
 export type MorePostsQueryResult = Array<{
   _id: string
   status: 'draft' | 'published'
@@ -732,11 +1207,15 @@ export type MorePostsQueryResult = Array<{
       _type: 'image'
     }
   } | null
+  categories: Array<{
+    title: string
+    slug: string
+  }> | null
 }>
 
 // Source: sanity/lib/queries.ts
 // Variable: postQuery
-// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  }
+// Query: *[_type == "post" && slug.current == $slug] [0] {    content[]{    ...,    markDefs[]{      ...,        _type == "link" => {    "page": page->slug.current,    "post": post->slug.current  }    }  },      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),  "title": coalesce(title, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{firstName, lastName, picture},  "categories": categories[]->{title, "slug": slug.current},    "relatedProducts": relatedProducts[]->{        _id,  name,  "slug": slug.current,  price,  compareAtPrice,  metal,  "image": images[0],  "hoverImage": images[1],  "category": category->title,  "soldOut": select(    count(variants) > 0 => count(variants[stock > 0]) == 0,    coalesce(stock, 0) <= 0  ),    }  }
 export type PostQueryResult = {
   content: Array<
     | {
@@ -797,7 +1276,40 @@ export type PostQueryResult = {
       _type: 'image'
     }
   } | null
+  categories: Array<{
+    title: string
+    slug: string
+  }> | null
+  relatedProducts: Array<{
+    _id: string
+    name: string
+    slug: string
+    price: number
+    compareAtPrice: number | null
+    metal: 'platinum' | 'rose-gold' | 'silver' | 'white-gold' | 'yellow-gold' | null
+    image:
+      | ({
+          _key: string
+        } & ImageWithAlt)
+      | null
+    hoverImage:
+      | ({
+          _key: string
+        } & ImageWithAlt)
+      | null
+    category: string
+    soldOut: boolean | false | true
+  }> | null
 } | null
+
+// Source: sanity/lib/queries.ts
+// Variable: blogCategoriesQuery
+// Query: *[_type == "blogCategory" && defined(slug.current)] | order(title asc) {    _id,    title,    "slug": slug.current  }
+export type BlogCategoriesQueryResult = Array<{
+  _id: string
+  title: string
+  slug: string
+}>
 
 // Source: sanity/lib/queries.ts
 // Variable: postPagesSlugs
@@ -817,12 +1329,23 @@ export type PagesSlugsResult = Array<{
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "settings"][0]': SettingsQueryResult
-    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        button {\n          ...,\n          \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n        }\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
-    '\n  *[_type == "page" || _type == "post" && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
-    '\n  *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': AllPostsQueryResult
-    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': MorePostsQueryResult
-    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n\n  }\n': PostQueryResult
+    '*[_type == "settings"][0]{\n  ...,\n  featuredCollection->{\n    _id,\n    title,\n    "slug": slug.current,\n    tagline,\n    description,\n    heroImage\n  }\n}': SettingsQueryResult
+    '\n  *[_type == "product" && defined(slug.current)\n    && (!defined($category) || category->slug.current == $category)\n    && (!defined($metal) || metal == $metal)\n    && (!defined($minPrice) || price >= $minPrice)\n    && (!defined($maxPrice) || price <= $maxPrice)\n  ] | order(featured desc, _createdAt desc) {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  compareAtPrice,\n  metal,\n  "image": images[0],\n  "hoverImage": images[1],\n  "category": category->title,\n  "soldOut": select(\n    count(variants) > 0 => count(variants[stock > 0]) == 0,\n    coalesce(stock, 0) <= 0\n  ),\n\n  }\n': ProductsQueryResult
+    '\n  *[_type == "product" && featured == true && defined(slug.current)] | order(_createdAt desc) [0...8] {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  compareAtPrice,\n  metal,\n  "image": images[0],\n  "hoverImage": images[1],\n  "category": category->title,\n  "soldOut": select(\n    count(variants) > 0 => count(variants[stock > 0]) == 0,\n    coalesce(stock, 0) <= 0\n  ),\n\n  }\n': FeaturedProductsQueryResult
+    '\n  *[_type == "product" && slug.current == $slug][0] {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  compareAtPrice,\n  metal,\n  "image": images[0],\n  "hoverImage": images[1],\n  "category": category->title,\n  "soldOut": select(\n    count(variants) > 0 => count(variants[stock > 0]) == 0,\n    coalesce(stock, 0) <= 0\n  ),\n\n    _type,\n    images,\n    shortDescription,\n    description,\n    details,\n    care,\n    gemstones,\n    stock,\n    variants[]{_key, label, price, stock},\n    "categoryRef": category->{_id, title, "slug": slug.current},\n  }\n': ProductQueryResult
+    '\n  *[_type == "product" && category._ref == $categoryId && _id != $skip && defined(slug.current)] | order(featured desc) [0...4] {\n    \n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  compareAtPrice,\n  metal,\n  "image": images[0],\n  "hoverImage": images[1],\n  "category": category->title,\n  "soldOut": select(\n    count(variants) > 0 => count(variants[stock > 0]) == 0,\n    coalesce(stock, 0) <= 0\n  ),\n\n  }\n': RelatedProductsQueryResult
+    '\n  *[_type == "product" && defined(slug.current)]\n  {"slug": slug.current}\n': ProductSlugsResult
+    '\n  *[_type == "category" && defined(slug.current)] | order(order asc, title asc) {\n    _id,\n    title,\n    "slug": slug.current,\n    image\n  }\n': CategoriesQueryResult
+    '\n  *[_type == "collection" && defined(slug.current)] | order(title asc) {\n    _id,\n    title,\n    "slug": slug.current,\n    tagline,\n    heroImage\n  }\n': CollectionsQueryResult
+    '\n  *[_type == "collection" && slug.current == $slug][0] {\n    _id,\n    _type,\n    title,\n    "slug": slug.current,\n    tagline,\n    description,\n    heroImage,\n    "products": products[]->{\n      \n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  compareAtPrice,\n  metal,\n  "image": images[0],\n  "hoverImage": images[1],\n  "category": category->title,\n  "soldOut": select(\n    count(variants) > 0 => count(variants[stock > 0]) == 0,\n    coalesce(stock, 0) <= 0\n  ),\n\n    }\n  }\n': CollectionQueryResult
+    '\n  *[_type == "collection" && defined(slug.current)]\n  {"slug": slug.current}\n': CollectionSlugsResult
+    '\n  *[_type == "product" && _id in $ids] {\n    _id,\n    name,\n    price,\n    stock,\n    "image": images[0],\n    variants[]{_key, label, price, stock}\n  }\n': CheckoutProductsQueryResult
+    '\n  *[_type == \'page\' && slug.current == $slug][0]{\n    _id,\n    _type,\n    name,\n    slug,\n    heading,\n    subheading,\n    "pageBuilder": pageBuilder[]{\n      ...,\n      _type == "callToAction" => {\n        ...,\n        button {\n          ...,\n          \n  link {\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n      }\n\n        }\n      },\n      _type == "featuredProducts" => {\n        ...,\n        "products": products[]->{\n          \n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  compareAtPrice,\n  metal,\n  "image": images[0],\n  "hoverImage": images[1],\n  "category": category->title,\n  "soldOut": select(\n    count(variants) > 0 => count(variants[stock > 0]) == 0,\n    coalesce(stock, 0) <= 0\n  ),\n\n        }\n      },\n      _type == "infoSection" => {\n        content[]{\n          ...,\n          markDefs[]{\n            ...,\n            \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n          }\n        }\n      },\n    },\n  }\n': GetPageQueryResult
+    '\n  *[_type in ["page", "post", "product", "collection"] && defined(slug.current)] | order(_type asc) {\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n  }\n': SitemapDataResult
+    '\n  *[_type == "post" && defined(slug.current)\n    && (!defined($category) || $category in categories[]->slug.current)\n  ] | order(date desc, _updatedAt desc) {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  "categories": categories[]->{title, "slug": slug.current},\n\n  }\n': AllPostsQueryResult
+    '\n  *[_type == "post" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  "categories": categories[]->{title, "slug": slug.current},\n\n  }\n': MorePostsQueryResult
+    '\n  *[_type == "post" && slug.current == $slug] [0] {\n    content[]{\n    ...,\n    markDefs[]{\n      ...,\n      \n  _type == "link" => {\n    "page": page->slug.current,\n    "post": post->slug.current\n  }\n\n    }\n  },\n    \n  _id,\n  "status": select(_originalId in path("drafts.**") => "draft", "published"),\n  "title": coalesce(title, "Untitled"),\n  "slug": slug.current,\n  excerpt,\n  coverImage,\n  "date": coalesce(date, _updatedAt),\n  "author": author->{firstName, lastName, picture},\n  "categories": categories[]->{title, "slug": slug.current},\n\n    "relatedProducts": relatedProducts[]->{\n      \n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  compareAtPrice,\n  metal,\n  "image": images[0],\n  "hoverImage": images[1],\n  "category": category->title,\n  "soldOut": select(\n    count(variants) > 0 => count(variants[stock > 0]) == 0,\n    coalesce(stock, 0) <= 0\n  ),\n\n    }\n  }\n': PostQueryResult
+    '\n  *[_type == "blogCategory" && defined(slug.current)] | order(title asc) {\n    _id,\n    title,\n    "slug": slug.current\n  }\n': BlogCategoriesQueryResult
     '\n  *[_type == "post" && defined(slug.current)]\n  {"slug": slug.current}\n': PostPagesSlugsResult
     '\n  *[_type == "page" && defined(slug.current)]\n  {"slug": slug.current}\n': PagesSlugsResult
   }

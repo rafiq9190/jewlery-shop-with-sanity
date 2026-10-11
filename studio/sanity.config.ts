@@ -35,7 +35,11 @@ const homeLocation = {
 function resolveHref(documentType?: string, slug?: string): string | undefined {
   switch (documentType) {
     case 'post':
-      return slug ? `/posts/${slug}` : undefined
+      return slug ? `/journal/${slug}` : undefined
+    case 'product':
+      return slug ? `/shop/${slug}` : undefined
+    case 'collection':
+      return slug ? `/collections/${slug}` : undefined
     case 'page':
       return slug ? `/${slug}` : undefined
     default:
@@ -47,7 +51,7 @@ function resolveHref(documentType?: string, slug?: string): string | undefined {
 // Main Sanity configuration
 export default defineConfig({
   name: 'default',
-  title: 'Sanity + Next.js Starter Template',
+  title: 'Aurelia Fine Jewelry',
 
   projectId,
   dataset,
@@ -73,8 +77,16 @@ export default defineConfig({
             filter: `_type == "page" && slug.current == $slug || _id == $slug`,
           },
           {
-            route: '/posts/:slug',
+            route: '/journal/:slug',
             filter: `_type == "post" && slug.current == $slug || _id == $slug`,
+          },
+          {
+            route: '/shop/:slug',
+            filter: `_type == "product" && slug.current == $slug || _id == $slug`,
+          },
+          {
+            route: '/collections/:slug',
+            filter: `_type == "collection" && slug.current == $slug || _id == $slug`,
           },
         ]),
         // Locations Resolver API allows you to define where data is being used in your application. https://www.sanity.io/docs/visual-editing/presentation-resolver-api#8d8bca7bfcd7
@@ -114,6 +126,35 @@ export default defineConfig({
                   href: '/',
                 } satisfies DocumentLocation,
               ].filter(Boolean) as DocumentLocation[],
+            }),
+          }),
+          product: defineLocations({
+            select: {
+              title: 'name',
+              slug: 'slug.current',
+            },
+            resolve: (doc) => ({
+              locations: [
+                {
+                  title: doc?.title || 'Untitled',
+                  href: resolveHref('product', doc?.slug)!,
+                },
+                {title: 'Shop', href: '/shop'},
+              ],
+            }),
+          }),
+          collection: defineLocations({
+            select: {
+              title: 'title',
+              slug: 'slug.current',
+            },
+            resolve: (doc) => ({
+              locations: [
+                {
+                  title: doc?.title || 'Untitled',
+                  href: resolveHref('collection', doc?.slug)!,
+                },
+              ],
             }),
           }),
         },

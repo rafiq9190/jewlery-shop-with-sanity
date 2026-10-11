@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Cta from '@/app/components/Cta'
+import FeaturedProductsBlock from '@/app/components/FeaturedProductsBlock'
 import Info from '@/app/components/InfoSection'
 import {dataAttr} from '@/sanity/lib/utils'
 import {PageBuilderSection} from '@/sanity/lib/types'
@@ -19,6 +20,7 @@ type BlocksType = {
 const Blocks = {
   callToAction: Cta,
   infoSection: Info,
+  featuredProducts: FeaturedProductsBlock,
 } as BlocksType
 
 /**
@@ -49,7 +51,7 @@ export default function BlockRenderer({block, index, pageId, pageType}: BlockPro
   // Block doesn't exist yet
   return React.createElement(
     () => (
-      <div className="w-full bg-gray-100 text-center text-gray-500 p-20 rounded">
+      <div className="w-full bg-cream text-center text-stone p-20">
         A &ldquo;{block._type}&rdquo; block hasn&apos;t been created
       </div>
     ),

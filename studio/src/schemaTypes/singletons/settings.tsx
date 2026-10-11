@@ -17,7 +17,7 @@ export const settings = defineType({
   fields: [
     defineField({
       name: 'title',
-      description: 'This field is the title of your blog.',
+      description: 'The name of your store.',
       title: 'Title',
       type: 'string',
       initialValue: demo.title,
@@ -112,6 +112,57 @@ export const settings = defineType({
               },
             ],
           },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'announcement',
+      title: 'Announcement bar',
+      description: 'Short message shown above the header, e.g. "Complimentary shipping on orders over $200"',
+      type: 'string',
+    }),
+    defineField({
+      name: 'hero',
+      title: 'Homepage hero',
+      type: 'object',
+      fields: [
+        defineField({name: 'eyebrow', title: 'Eyebrow', type: 'string'}),
+        defineField({name: 'heading', title: 'Heading', type: 'string'}),
+        defineField({
+          name: 'headingAccent',
+          title: 'Heading accent',
+          description: 'Shown in gold italics after the heading',
+          type: 'string',
+        }),
+        defineField({name: 'subheading', title: 'Subheading', type: 'text', rows: 2}),
+        defineField({name: 'image', title: 'Image', type: 'imageWithAlt'}),
+        defineField({name: 'ctaLabel', title: 'Button label', type: 'string'}),
+      ],
+    }),
+    defineField({
+      name: 'featuredCollection',
+      title: 'Featured collection',
+      description: 'Highlighted in a banner on the homepage',
+      type: 'reference',
+      to: [{type: 'collection'}],
+    }),
+    defineField({
+      name: 'socialLinks',
+      title: 'Social links',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'socialLink',
+          fields: [
+            defineField({
+              name: 'platform',
+              type: 'string',
+              options: {list: ['Instagram', 'Pinterest', 'TikTok', 'Facebook']},
+            }),
+            defineField({name: 'url', type: 'url'}),
+          ],
+          preview: {select: {title: 'platform', subtitle: 'url'}},
         }),
       ],
     }),

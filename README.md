@@ -1,3 +1,59 @@
+# Aurelia — fine jewelry store
+
+Next.js storefront (`frontend/`) + Sanity Studio (`studio/`) with a product catalog, cart, Stripe Checkout and a journal (blog).
+
+## Running locally
+
+```sh
+npm install
+npm run dev            # site on http://localhost:3000, Studio on http://localhost:3333
+```
+
+Sample content (catalog, photography, journal posts, About/Care pages) can be recreated with:
+
+```sh
+cd studio
+npm run seed           # categories, products, collections
+npm run seed:content   # images, author, journal posts, pages
+```
+
+## Turning on payments
+
+Add to `frontend/.env.local` (see `frontend/.env.example`):
+
+- `STRIPE_SECRET_KEY` — from the Stripe dashboard (Developers → API keys). Use a `sk_test_` key first.
+- `STRIPE_WEBHOOK_SECRET` — locally run `stripe listen --forward-to localhost:3000/api/stripe/webhook` and copy the `whsec_` value it prints. In production, add a webhook endpoint for `https://<your-domain>/api/stripe/webhook` with the `checkout.session.completed` event.
+- `SANITY_API_WRITE_TOKEN` — Editor token (already set locally); used to record orders, reduce stock and save newsletter sign-ups.
+
+Test with card `4242 4242 4242 4242`, any future date and any CVC. Paid orders appear under **Orders** in the Studio.
+
+## Going live
+
+**Studio** is deployed at https://aurelia-jewelry.sanity.studio (redeploy with `cd studio && npx sanity deploy`).
+
+**Website on Netlify**
+
+1. Push this repo to GitHub, then in Netlify: *Add new site → Import an existing project*.
+2. Leave **Base directory** empty and set **Package directory** to `frontend` (build settings come from `frontend/netlify.toml`).
+3. Add these environment variables (values are in `frontend/.env.local`):
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID` = `cuhlkr7u`
+   - `NEXT_PUBLIC_SANITY_DATASET` = `production`
+   - `NEXT_PUBLIC_SANITY_STUDIO_URL` = `https://aurelia-jewelry.sanity.studio`
+   - `NEXT_PUBLIC_SITE_URL` = your Netlify URL, e.g. `https://<site>.netlify.app`
+   - `SANITY_API_READ_TOKEN`, `SANITY_API_WRITE_TOKEN` (mark as secret)
+   - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (when you turn on payments)
+4. After the first deploy, connect Sanity to the site URL:
+   ```sh
+   cd studio
+   npx sanity cors add https://<site>.netlify.app --credentials
+   ```
+   Then set `SANITY_STUDIO_PREVIEW_URL="https://<site>.netlify.app"` in `studio/.env` and run `npx sanity deploy`, so the Studio's Presentation tool previews the live site.
+5. In Stripe, add a webhook endpoint `https://<site>.netlify.app/api/stripe/webhook` for the `checkout.session.completed` event, and put its signing secret in `STRIPE_WEBHOOK_SECRET`.
+
+Product photography is from Unsplash (free Unsplash License); credits are stored on each image asset in Sanity.
+
+---
+
 # Clean Next.js + Sanity app
 
 This template includes a [Next.js](https://nextjs.org/) app with a [Sanity Studio](https://www.sanity.io/) – an open-source React application that connects to your Sanity project’s hosted dataset. The Studio is configured locally and can then be deployed for content collaboration.

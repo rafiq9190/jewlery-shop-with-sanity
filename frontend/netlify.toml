@@ -1,0 +1,9 @@
+# Netlify settings for the storefront. In the Netlify UI, set:
+#   Base directory:    (leave empty — the repo root, so npm workspaces install correctly)
+#   Package directory: frontend
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"

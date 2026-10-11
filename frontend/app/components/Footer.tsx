@@ -1,27 +1,85 @@
-export default function Footer() {
+import Link from 'next/link'
+
+import Newsletter from '@/app/components/Newsletter'
+import {sanityFetch} from '@/sanity/lib/live'
+import {categoriesQuery, settingsQuery} from '@/sanity/lib/queries'
+
+export default async function Footer() {
+  const [{data: settings}, {data: categories}] = await Promise.all([
+    sanityFetch({query: settingsQuery}),
+    sanityFetch({query: categoriesQuery}),
+  ])
+  const title = settings?.title || 'Aurelia'
+
   return (
-    <footer className="bg-gray-50 relative">
-      <div className="absolute inset-0 bg-[url(/images/tile-grid-black.png)] bg-size-[17px] opacity-20 bg-position-[0_1]" />
-      <div className="container relative">
-        <div className="flex flex-col items-center py-28 lg:flex-row">
-          <h3 className="mb-10 text-center text-4xl font-mono leading-tight tracking-tighter lg:mb-0 lg:w-1/2 lg:pr-4 lg:text-left lg:text-2xl">
-            Built with Sanity + Next.js.
-          </h3>
-          <div className="flex flex-col gap-3 items-center justify-center lg:w-1/2 lg:flex-row lg:pl-4">
-            <a
-              href="https://github.com/sanity-io/sanity-template-nextjs-clean"
-              className="rounded-full flex gap-2 font-mono whitespace-nowrap items-center bg-black hover:bg-blue focus:bg-blue py-3 px-6 text-white transition-colors duration-200"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View on GitHub
-            </a>
-            <a href="https://nextjs.org/docs" className="mx-3 hover:underline font-mono">
-              Read Next.js Documentation
-            </a>
-          </div>
+    <footer className="bg-ink text-ivory/80">
+      <div className="container grid gap-16 py-20 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+        <div className="max-w-sm space-y-6">
+          <p className="font-serif text-4xl uppercase tracking-[0.18em] text-ivory">{title}</p>
+          <p className="leading-relaxed">
+            Join our list for first access to new collections, private events and the stories behind each piece.
+          </p>
+          <Newsletter />
+        </div>
+        <FooterColumn
+          title="Shop"
+          links={[
+            {href: '/shop', label: 'All jewelry'},
+            ...categories.map((c) => ({href: `/shop?category=${c.slug}`, label: c.title})),
+          ]}
+        />
+        <FooterColumn
+          title="House"
+          links={[
+            {href: '/about', label: 'Our story'},
+            {href: '/journal', label: 'Journal'},
+            {href: '/care', label: 'Jewelry care'},
+          ]}
+        />
+        {settings?.socialLinks && settings.socialLinks.length > 0 && (
+          <FooterColumn
+            title="Follow"
+            links={settings.socialLinks
+              .filter((s) => s.url && s.platform)
+              .map((s) => ({href: s.url!, label: s.platform!, external: true}))}
+          />
+        )}
+      </div>
+      <div className="border-t border-ivory/10">
+        <div className="container flex flex-col items-center justify-between gap-4 py-6 text-xs text-ivory/50 md:flex-row">
+          <p>
+            © {new Date().getFullYear()} {title}. All rights reserved.
+          </p>
+          <p className="eyebrow text-[0.6rem]">Recycled gold · Ethically sourced stones · Lifetime care</p>
         </div>
       </div>
     </footer>
+  )
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string
+  links: {href: string; label: string; external?: boolean}[]
+}) {
+  return (
+    <div>
+      <p className="eyebrow mb-6 text-champagne">{title}</p>
+      <ul className="space-y-3">
+        {links.map((l) => (
+          <li key={l.href}>
+            <Link
+              href={l.href}
+              className="hover:text-champagne transition-colors"
+              {...(l.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+            >
+              {l.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 }

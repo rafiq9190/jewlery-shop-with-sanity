@@ -18,6 +18,7 @@
     "frontend"
   ],
   "scripts": {
+    "build": "npm run build --workspace=frontend",
     "dev": "turbo dev",
     "dev:next": "npm run dev --workspace=frontend",
     "dev:studio": "npm run dev --workspace=studio",

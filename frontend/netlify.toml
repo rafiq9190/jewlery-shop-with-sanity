@@ -1,9 +1,12 @@
 # Netlify settings for the storefront. In the Netlify UI, set:
 #   Base directory:    (leave empty — the repo root, so npm workspaces install correctly)
 #   Package directory: frontend
+#
+# Netlify runs the command from the repo root and resolves `publish` from there
+# too, so both are written relative to the root rather than to frontend/.
 [build]
-  command = "npm run build"
-  publish = ".next"
+  command = "npm run build --workspace=frontend"
+  publish = "frontend/.next"
 
 [build.environment]
   NODE_VERSION = "22"
